@@ -1,0 +1,68 @@
+{
+  "_from": "node-koa-cli",
+  "_id": "node-koa-cli@1.0.20",
+  "_inBundle": false,
+  "_integrity": "sha512-0Nny1SMb2VGzAIhPWl7Fw+Rwt7OZuMYKcjOPaNO2AJ7WMJMFRYvf8WZbAXYK8JENc8iOrhQbqi418/wNEyBsXQ==",
+  "_location": "/node-koa-cli",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "node-koa-cli",
+    "name": "node-koa-cli",
+    "escapedName": "node-koa-cli",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/node-koa-cli/-/node-koa-cli-1.0.20.tgz",
+  "_shasum": "e3a3e425c2eb2fb70ba243d37ef04f54af963c33",
+  "_spec": "node-koa-cli",
+  "_where": "C:\\WINDOWS\\system32",
+  "author": "",
+  "bin": {
+    "koa-cli": "index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/tangzihan-git/Node-Koa-Cli/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "commander": "^7.2.0",
+    "glob": "^7.1.6",
+    "inquirer": "^8.0.0",
+    "minimist": "^1.2.5",
+    "sequelize": "^6.6.2"
+  },
+  "deprecated": false,
+  "description": "It is not only the project building tool of KOA, but also can quickly generate restful API and the most basic background management template. You only need to input one line of command and write some configuration files. Node koa cli will help you complete all the repetitive things",
+  "directories": {
+    "lib": "lib"
+  },
+  "homepage": "https://github.com/tangzihan-git/Node-Koa-Cli#readme",
+  "keywords": [
+    "node-cli",
+    "koa-cli",
+    "mongoose",
+    "sequelize",
+    "mysql2",
+    "restful",
+    "generate-code"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "node-koa-cli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tangzihan-git/Node-Koa-Cli.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.21"
+}
