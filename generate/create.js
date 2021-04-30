@@ -2,6 +2,7 @@ const glob = require('glob');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const { noAllowdField } = require('../config/config_static');
 
 module.exports =  function(root,options={}) {
     const {  DataBaseLib, ConfigModelRoot, StaticRouter }  = require(`${path.resolve(root,'./node_koa.config')}`); 
@@ -27,6 +28,12 @@ module.exports =  function(root,options={}) {
     });
     models.forEach(async (f) => {
         const ctrlClass = require(f);
+        // 检查是否有不能填写的字段
+        Object.keys(ctrlClass.fields).forEach(item =>{
+            if(noAllowdField.includes(item)){
+                throw Error(`字段不允许出现：[${noAllowdField}]\nField not allowed[${noAllowdField}]`)
+            }
+        })
         // 去掉控制器绝对路径部分，去掉控制器_model后缀，生成一个模型名称
         let modelName = f.replace(absoluteRoot, '').replace('/','').replace(/\_|model/g, '');
         // 将生成好的模型写入文件

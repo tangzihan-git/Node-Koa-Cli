@@ -4,9 +4,6 @@ module.exports = function() {
 module.exports = {
     modelName:'eg',
     fields: {
-        id: {
-            type:"Number"
-        },
         name: {
             type: "String",
             isUnique: true,
