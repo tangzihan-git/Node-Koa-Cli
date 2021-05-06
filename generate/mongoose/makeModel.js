@@ -21,7 +21,7 @@ function generateModelMethods(model) {
     if(model.actions.remove) { 
       model.actions.remove.by.forEach(el=> {
           
-          methods += `
+        methods += `
         static async remove${classModelName}By${ el=='_id' ? 'Id': firstWordToUppercase(el)}(${el}) {
             const ${el}s = ${el}.split(',')
             return new Promise(async (res,rej) => {
@@ -92,6 +92,22 @@ function generateModelMethods(model) {
         }
         
     })
+    if(model.hasOwnProperty('foreign')){
+        model.foreign.forEach(item => {
+            // 
+            methods +=`
+        static async  get${classModelName}By${firstWordToUppercase(item.onModel)}(pg=1,${item.key}) {
+            return new Promise(async (res,rej)=> {
+                const ${commonModelName} =  await makePageData(pg, ${classModelName}, { ${item.key} })
+                if(${commonModelName}.allCount > 0){
+                    res(${commonModelName})
+                }else{
+                    res(undefined)
+                }
+            })
+        }\n`
+        })
+    }
 
 
     }

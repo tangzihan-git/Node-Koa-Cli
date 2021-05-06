@@ -3,6 +3,7 @@ const glob = require('glob');
 const path = require('path');
 const fs = require('fs');
 const configTemplate = require('./templates/common/config_template'); // 配置文件模板
+const appController = require('./templates/common/app_controller_template');
 const packageTemplate = require('./templates/package_template');
 const modelConfigTemplate = require('./templates/common/model_config_template');
 let root = process.cwd();
@@ -54,6 +55,13 @@ program
  .description('Quickly generate background management system according to model configuration file')
  .action(async (name, cmd) => {
    console.log(chalk.yellow("The module is under development..."))
+   // 创建管理系统根目录
+   fs.mkdirSync(`${root}/client`,{recursive:true})
+   // 填入静态文件
+  //  "./templates/client/babel.config.js"
+  // copyIt(`${root}/client//babel.config.js`,)
+  require('./generate/test')()
+   
 
  })
 
@@ -73,12 +81,15 @@ async function __init__(options){
   fs.writeFile(`${root}/config/config.json`,JSON.stringify(require('./config/config.json'), null, 4), (err) => {
     if (err) throw err;
   });
+  // 初始化app_controller
+  fs.writeFile(`${root}/controllers/app.js`,appController(), (err) => { if (err) throw err;});
   // 写入一个测试模型
   fs.writeFile(`${root}/config/model/eg_model.js`,modelConfigTemplate() , (err) => {
       if (err) throw err;
       require('./generate/create')(root,options)
 
   });
+  
 
 }
  
@@ -89,7 +100,8 @@ async function makePackage(name,arg){
        // package.json生成成功后运行npm install(扩展功能)
    });
 }  
-  
+
+
 program.parse(process.argv);
 
 

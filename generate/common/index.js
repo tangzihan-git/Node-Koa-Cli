@@ -24,7 +24,7 @@ module.exports = {
                     if( !model.actions.find.by.includes(item)) {
                         throw Error(`\n错误：唯一字段${item}必须添加到actions.find.by数组中\nError: The unique field ${item} must be added to the Actions.find.by array`)
                     }
-                    verifyMethods += ` await  db.${classModelName}.get${classModelName}By${firstWordToUppercase(item)}(ctx.request.body.${item}) || `
+                    verifyMethods += ` await  ${classModelName}.get${classModelName}By${firstWordToUppercase(item)}(ctx.request.body.${item}) || `
                 })
                 // 去掉末尾的 || 运算符
                 verifyMethods = verifyMethods.substring(0,verifyMethods.lastIndexOf('||'))
@@ -37,13 +37,13 @@ module.exports = {
             ctx.body = new RetJson(403, '${uniqueDesc}')
             return;
         }
-        const ${commonModelName} = await db.${classModelName}.create${classModelName}(${str})
+        const ${commonModelName} = await ${classModelName}.create${classModelName}(${str})
         ctx.body = new RetJson('success',${commonModelName})
     },\n`
             }else{
                 methods += `
     async store(ctx) {
-        const ${commonModelName} = await db.${classModelName}.create${classModelName}(${str})
+        const ${commonModelName} = await ${classModelName}.create${classModelName}(${str})
         ctx.body = new RetJson('success',${commonModelName})
     },\n`
             }
@@ -52,7 +52,7 @@ module.exports = {
             // model.actions.remove.by.forEach(el=> {
                 methods += `
     async destory(ctx) {
-        const ${commonModelName} = await db.${classModelName}.remove${classModelName}ById(ctx.query.id)
+        const ${commonModelName} = await ${classModelName}.remove${classModelName}ById(ctx.params.id)
         ctx.body = new RetJson('success',${commonModelName})
     },\n`
             // });
@@ -66,7 +66,7 @@ module.exports = {
         str+=`\n        }`
         methods += `
     async update(ctx) {
-        const ${commonModelName} = await db.${classModelName}.update${classModelName}ById(ctx.params.id,${str})
+        const ${commonModelName} = await ${classModelName}.update${classModelName}ById(ctx.params.id,${str})
         ctx.body = new RetJson('success',${commonModelName})
     },\n`
             // });
@@ -74,16 +74,27 @@ module.exports = {
         if(model.actions.find) {
             methods += `
     async  index(ctx){
-        const ${commonModelName} = await db.${classModelName}.get${classModelName}(ctx.query.pg)
+        const ${commonModelName} = await ${classModelName}.get${classModelName}(ctx.query.pg)
         ctx.body = new RetJson('success',${commonModelName})
     },\n`
         // if(model.actions.find.by.includes('id')) {
             methods += `
     async  show(ctx){
-        const ${commonModelName} = await db.${classModelName}.get${classModelName}ById(ctx.params.id)
+        const ${commonModelName} = await ${classModelName}.get${classModelName}ById(ctx.params.id)
         ctx.body = new RetJson('success',${commonModelName})
     },\n`
         // }
+        }
+
+        if(model.hasOwnProperty('foreign')){
+            model.foreign.forEach(item => {
+                // 
+                methods +=`
+    async  show${classModelName}By${firstWordToUppercase(item.onModel)}(ctx) {
+        const ${commonModelName} =  await ${classModelName}.get${classModelName}By${firstWordToUppercase(item.onModel)}(ctx.query.pg, ctx.params.${item.refer})
+        ctx.body = new RetJson('success',${commonModelName})
+    }`
+            })
         }
     
         return methods
@@ -94,8 +105,8 @@ module.exports = {
         let controllers = '';
         let routers = '';
          models.forEach(async (f) => {
-            const ctrlClass = require(f);
-            let modelName = ctrlClass.modelName.toLowerCase()
+            const model = require(f);
+            let modelName = model.modelName.toLowerCase()
             controllers += `const ${modelName}Controller = require('../controllers/${modelName}.js');\n`
             // const userController = require('../controllers/user_controller')
             routers += `
@@ -103,8 +114,15 @@ module.exports = {
 router.post('/${modelName}', ${modelName}Controller.store);
 router.get('/${modelName}', ${modelName}Controller.index);
 router.get('/${modelName}/:id', ${modelName}Controller.show);
-router.delete('/${modelName}/', ${modelName}Controller.destory); // delete需要传入query兼容多选删除
+router.delete('/${modelName}/:id', ${modelName}Controller.destory); // 传入要删除的id 如 1,2,3,4,5
 router.put('/${modelName}/:id', ${modelName}Controller.update);\n`
+
+if(model.hasOwnProperty('foreign')){
+    model.foreign.forEach(item => {
+        routers +=`router.get('/${item.onModel}/:id/${modelName}', ${modelName}Controller.show${firstWordToUppercase(model.modelName)}By${firstWordToUppercase(item.onModel)});`
+    })
+}
+
         })
         return {
             routers,
