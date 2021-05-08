@@ -1,15 +1,10 @@
 # Node Koa Cli
+快速构建koa项目，生成restful API，快速构建后台管理模板。
 
-Quickly build koa project, generate restful API, and quickly build background management template.
+# 介绍
+它不仅是KOA的项目构建工具，而且可以快速生成restful API和最基本的后台管理模板。您只需要输入一行命令，并写入一些配置文件。Node koa cli将帮助您完成所有重复的事情。
 
-# About
-It is not only the project building tool of KOA, but also can quickly generate restful API and the most basic background management template. You only need to input one line of command and write some configuration files. Node koa cli will help you complete all the repetitive things.
-
-# Translations
-* [English](https://github.com/tangzihan-git/Node-Koa-Cli/tree/master)
-* [中文文档](https://github.com/tangzihan-git/Node-Koa-Cli/blob/master/README%20_zh.md)
-
-# How to Install
+# 安装
 ```
 npm install node-koa-cli -g
 ```
@@ -17,31 +12,31 @@ or
 ```
 npm install node-koa-cli -d
 ```
-# Supported arguments and commands
-**Usge**
+# 命令和参数
+**使用命令**
 
-If you are installing node koa cli locally, you need to add 'npx' before the command.
-
+如果在本地安装node koa cli，需要在命令前添加'npx'
 **Create Koa Project**
 ```
 koa-cli create [project]
 ```
-This command will help you build the most basic koa skeleton.
 
+这个命令将帮助您构建最基本的koa框架
 
 **Generate restful API**
 ```
 koa-cli make:curd
 ```
-This command will generate restful API based on the configuration file under `/config/model`.
+这个命令将基于`/ config / model`下的配置文件生成resetFul风格的API。
 
-# How to write configuration file
-Using cli to generate restful API automatically, you need to write the configuration file of the model under /config/model
-If you previously run the command `koa cli create [porject]` and the selected database type is `MongoDB`, then cli will automatically help you create a data table
-If you choose 'MySQL', then you need to use `sequlize-cli` to help you create data tables. But don't worry. No matter what database type you choose, CLI will help you generate restful API.
+# 如何编写配置文件
+利用cli自动生成restful 风格的api,你需要在 /config/model下编写模型的配置文件
+如果你之前运行命令 `koa-cli create [porject]` 选择的数据库类型是`MongoDB`，那么cli会自动帮你创建数据表
+如果你选择的是`MySQL`,那么你需要利用 `sequlize-cli`,帮你创建数据表，不过不用担心,不管你选择什么数据库类型，cli都会帮你生成restful风格的api
 
-Here is an example of the model profile
-If you need to create a data table named example and want cli to help you generate the most basic curd, you should create a new example under / config / model_ Model.js file, and write the configuration with reference to the following example
+下面给出模型配置文件的示例
+如果你需要创建一个数据表名为example，同时又想cli帮你生成最基础的curd,那么你应该在/config/model下
+新建一个example_model.js的文件，并参照下例编写配置
 ```
 // config/model/example_model.js
 module.exports = {
@@ -75,22 +70,22 @@ module.exports = {
         }
     },
     other: {
-        uniqueDesc:'exists!'
+        uniqueDesc:'账户已经存在'
     }
 }
 ```
 
-At present, the model configuration of node koa cli is very simple, with only four attributes `modelName`、`fields`、`actions`、`other`.
 
+现阶段node-koa-cli的模型配置非常简单，只有四个属性 `modelName`、`fields`、`actions`、`other`.
 **fields**
-`Fields` represent the fields of the data table, which accept an object to describe the field. Currently, the configurable properties are `type`, and `isunique`
-`Fields.type` accepts a string indicating the type of the field. The optional values are 'string', 'number', 'Boolean'. For more data types, please refer to mongoose or sequence. Node koa cli is fully compatible with them!
-The value of `fields.isunique` can only be `true / false` to indicate whether the field is unique. When the field 'isunique' is set to 'true', the field uniqueness verification will be performed every time create is performed, and the controller will generate verification logic
+fields表示数据表的字段，它接受一个对象，用于描述该字段，目前可配置的属性有 `type`,和 `isUnique`
+fields.type 接受一个字符串，表示该字段的类型，可选值有`String`、`Number`、`Boolean`...,更多数据类型请参照mongoose或者sequelize,node-koa-cli完全兼容它们！
+fields.isUnique 的值只能为`true/false` 表示该字段是否是唯一的，当字段的`isUnique`被设置为`true`时，每次执行create都会进行字段唯一性验证，同时控制器会生成验证逻辑
 
-> Note: in mongodb mode, do not add the fields attribute in the model configuration file `_id` This will lead to unexpected problems in the program!!!
+> 注意：在MongoDB模式下不要在模型配置文件的fields 属性添加 `_id`,这会导致程序出现意料不到的问题！！！
 
 
-Example:
+示例：
 ```
 // config/model/example_model.js
 fields: {
@@ -107,31 +102,29 @@ fields: {
     }
 },
 ```
-The above configuration will generate the following code in `/controllers/example.js`
+上面的配置会在 /controllers/example.js 里面生成如下代码
 ```
+
 async store(ctx) {
     if( await  db.Example.getExampleByName(ctx.request.body.name) ||  await  db.Example.getExampleByPhone(ctx.request.body.phone) ){
-        ctx.body = new RetJson(403, 'exists!')
+        ctx.body = new RetJson(403, '账户已经存在')
         return;
     }
    ...
 },
 ```
-Of course, more data format validation will be provided later.
+当然后期提供更多的数据格式验证。
 
 **actions**
-`actions` represent the operations of the model, including `create`,`update`,`remove`,`find`.
-`actions.create` Restful style add operations are generated, and `actions.create.fields` represent fields that allow inserted data tables
-
-Example:
+actions表示该模型的操作，包含 `create`,`update`,`remove`,`find`.
+actions.create 会生成restFul 风格的添加操作，actions.create.fields表示允许被插入的数据表的字段
+示例：
 ```
 create: {
     fields: ['name','sex']
 },
 ```
-
-The above configuration will generate the following code in `/controllers/example.js`
-
+上面的配置会在 /controllers/example.js生成如下代码
 ```
 async store(ctx) {
 const eg = await db.Example.createExample({
@@ -142,9 +135,9 @@ const eg = await db.Example.createExample({
 },
 ```
 **update**
-Update is not different from create. It is not detailed here.
-The main difference between them is that update has more than one by attribute, which represents which field is used as a condition to update data.
-Example:
+update与create相差不大，这里不在详叙。
+它们的主要区别就是 update多了一个by属性，这个属性表示以哪个字段作为条件去更新数据
+示例：
 ```
 actions: {
     update: {
@@ -153,9 +146,7 @@ actions: {
     },
 },
 ```
-
-The above configuration will generate the following code in `/model/example.js`
-
+上面的配置会在 /models/example.js生成如下代码
 ```
 static async updateExampleById(_id,obj) {
     return new Promise(async (res,rej) => {
@@ -163,14 +154,12 @@ static async updateExampleById(_id,obj) {
         if(eg){
             res(eg)
         }else{
-            rej('fail')
+            rej('更新失败')
         }
     })
 }
 ```
-
-/controller/example.js generates the following code
-
+/controller/example.js 生成如下代码
 ```
 async update(ctx) {
     const eg = await db.Eg.updateExampleById(ctx.params._id,{
@@ -182,18 +171,16 @@ async update(ctx) {
 },
 ```
 **remove**
-Remove is the same as upadte configuration, the only difference is that remove will generate delete operation, and remove does not support configuring fields.
+remove与upadte配置一样，唯一的区别是remove会生成删除操作，remove不支持配置fields
 **find**
-Find generates a find operation.
-example
+find会生成查找操作。
+示例
 ```
 find: {
     by:['id','name,password']
 }
 ```
-
-The above configuration will generate the following code in `/model/example.js`
-
+上述配置会在 /models/example.js 生成
 ```
 static async getExample(pg=1){
     return new Promise(async (res,rej)=> {
@@ -228,9 +215,7 @@ static async getExampleByNameAndPassword(name,password, pg=1) {
     })
 }
 ```
-
-/controllers/example.js generates the following code
-
+在 /controllers/example.js生成
 ```
 async  index(ctx){
     const eg = await db.Eg.getEg(ctx.query.pg)
@@ -242,4 +227,4 @@ async  show(ctx){
 },
 ```
 
-> Note that if a field is set `isUnique:true`, you need to add it to the find.by array.
+> 注意，如果给某字段设置了isUnique:true ,那么你需要将该字段添加到 find.by数组中。
