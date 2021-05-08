@@ -6,6 +6,7 @@ const configTemplate = require('./templates/common/config_template'); // 配置�
 const appController = require('./templates/common/app_controller_template');
 const packageTemplate = require('./templates/package_template');
 const modelConfigTemplate = require('./templates/common/model_config_template');
+const accountControllerTemplate = require('./templates/common/account_controller_template');
 let root = process.cwd();
 
 const  program  = require('commander');
@@ -83,8 +84,15 @@ async function __init__(options){
   });
   // 初始化app_controller
   fs.writeFile(`${root}/controllers/app.js`,appController(), (err) => { if (err) throw err;});
+  // 生成jwt授权认证
+  if(options.jwt){
+    fs.writeFile(`${root}/controllers/account.js`,accountControllerTemplate() , (err) => {
+      if (err) throw err;
+  });
+    
+  }
   // 写入一个测试模型
-  fs.writeFile(`${root}/config/model/eg_model.js`,modelConfigTemplate() , (err) => {
+  fs.writeFile(`${root}/config/model/user_model.js`,modelConfigTemplate(options.type) , (err) => {
       if (err) throw err;
       require('./generate/create')(root,options)
 

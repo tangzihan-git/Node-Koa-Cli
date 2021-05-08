@@ -1,34 +1,47 @@
-module.exports = function() {
-
+module.exports = function(type) {
+    let IntegerType = type == 'mongodb' ? 'Number' : 'Integer';
     return `
 module.exports = {
-    modelName:'eg',
+    modelName:'user', // 用户模型
     fields: {
-        name: {
+        nick: {
             type: "String",
             isUnique: true,
         },
-        sex: {
-            type: "String",
+        email:{
+            type:"String",
+            isUnique: true,
         },
-        phone: {
-            type: "String",
-            isUnique: true
+        password:{
+            type:"String"
+        },
+        verify_token:{
+            type:"String"
+        },
+        status:{
+            type:"${IntegerType}"
+        },
+        type:{
+            type:"${IntegerType}" // 用户组别
+        },
+        cover:{
+            type:"String"
         }
+        
     },
     actions: {
         create: {
-            fields: ['name','sex','phone']
+            fields: ['nick','email','password','verify_token','status','type','cover']
         },
         remove: {
-            by: ['id','name']
+            by: ['id']
         },
         update: {
             by: ['id'],
-            fields: ['name','sex','phone']
+            fields:['nick','email','password','verify_token','status','type','cover']
         },
         find: {
-            by:['id','name','phone','name,password']
+            by:['id','nick','email','email,password']
         }
     },
     other: {

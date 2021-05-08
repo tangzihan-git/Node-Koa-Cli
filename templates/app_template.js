@@ -4,6 +4,7 @@ let modelTemplate = `const Koa = require('koa');
 const koaBody = require('koa-body');
 const RetJson  = require('./lib/retjson');
 const { router } = require('./router');
+const cors = require('koa2-cors');
 
 ${options.static ? "const static = require('./router/static');":''}
 
@@ -29,17 +30,18 @@ app.use(async (ctx, next) => {
         }
     }
 });
+app.use(cors());
 ${options.static ? "static(router,{html:365});":''}
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen(0810, (err) => {
+app.listen(8081, (err) => {
     if (err) {
         console.error('服务启动失败', err);
         return;
     }
 
-    console.warn('server listening on port 0810');
+    console.warn('server listening on port 8081');
     console.warn('server running, god bless love...');
 });`
     

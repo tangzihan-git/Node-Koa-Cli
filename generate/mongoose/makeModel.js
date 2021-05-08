@@ -1,7 +1,7 @@
 const { firstWordToUppercase } = require('../../lib/common')
 function generateModelMethods(model) {
-    const classModelName = firstWordToUppercase(model.modelName);
-    const commonModelName = model.modelName.toLowerCase();
+    const classModelName = firstWordToUppercase(model.modelName).trim();
+    const commonModelName = model.modelName.toLowerCase().trim();
  
     let methods = ``;
     if(model.actions.create){

@@ -49,7 +49,7 @@ module.exports =  function(root,options={}) {
         generateController(ControllerRoot ,modelName, controllerTemplate(upperModelName, controllerMethods))
     })
     // 生成路由文件控制器引用,并写入路由文件
-    generateRouter(RouterRoot,routerTemplate(generateRouterMethods(models)))
+    generateRouter(RouterRoot,routerTemplate(generateRouterMethods(models), options))
     // 用户是否配置了静态文件路由
     if(StaticRouter){
         generateStaticRouter(RouterRoot,routerStaticTemplate())

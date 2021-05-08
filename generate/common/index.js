@@ -1,17 +1,20 @@
-const { firstWordToUppercase, getUniqueFiled }= require('../../lib/common')
-
+const { firstWordToUppercase, getUniqueFiled } = require('../../lib/common');
+const{ passwords } = require('../../config/config_static');
 module.exports = {
-    // 控制器方法生成器
     generateControllerMethods(model) {
-        const classModelName = firstWordToUppercase(model.modelName);
-        const commonModelName = model.modelName.toLowerCase();
-        
+        const classModelName = firstWordToUppercase(model.modelName).trim();
+        const commonModelName = model.modelName.toLowerCase().trim();
         let methods = ``;
         if(model.actions.create){
             // 拼接请求参数
             let str = `{`
             model.actions.create.fields.forEach(item=>{
-                str +=   `\n            ${item}: ctx.request.body.${item},`
+                if(passwords.includes(item)){
+                    str +=   `\n            ${item}: md5(ctx.request.body.${item}),`
+                }else{
+                    str +=   `\n            ${item}: ctx.request.body.${item},`
+                }
+               
             })
             str+=`\n        }`
     
@@ -38,13 +41,13 @@ module.exports = {
             return;
         }
         const ${commonModelName} = await ${classModelName}.create${classModelName}(${str})
-        ctx.body = new RetJson('success',${commonModelName})
+        ctx.body = new RetJson(0 ,'success', ${commonModelName})
     },\n`
             }else{
                 methods += `
     async store(ctx) {
         const ${commonModelName} = await ${classModelName}.create${classModelName}(${str})
-        ctx.body = new RetJson('success',${commonModelName})
+        ctx.body = new RetJson(0, 'success', ${commonModelName})
     },\n`
             }
         }
@@ -53,7 +56,7 @@ module.exports = {
                 methods += `
     async destory(ctx) {
         const ${commonModelName} = await ${classModelName}.remove${classModelName}ById(ctx.params.id)
-        ctx.body = new RetJson('success',${commonModelName})
+        ctx.body = new RetJson(0, 'success', ${commonModelName})
     },\n`
             // });
         }
@@ -67,7 +70,7 @@ module.exports = {
         methods += `
     async update(ctx) {
         const ${commonModelName} = await ${classModelName}.update${classModelName}ById(ctx.params.id,${str})
-        ctx.body = new RetJson('success',${commonModelName})
+        ctx.body = new RetJson(0, 'success', ${commonModelName})
     },\n`
             // });
         }
@@ -75,13 +78,13 @@ module.exports = {
             methods += `
     async  index(ctx){
         const ${commonModelName} = await ${classModelName}.get${classModelName}(ctx.query.pg)
-        ctx.body = new RetJson('success',${commonModelName})
+        ctx.body = new RetJson(0, 'success', ${commonModelName})
     },\n`
         // if(model.actions.find.by.includes('id')) {
             methods += `
     async  show(ctx){
         const ${commonModelName} = await ${classModelName}.get${classModelName}ById(ctx.params.id)
-        ctx.body = new RetJson('success',${commonModelName})
+        ctx.body = new RetJson(0, 'success', ${commonModelName})
     },\n`
         // }
         }
@@ -92,8 +95,8 @@ module.exports = {
                 methods +=`
     async  show${classModelName}By${firstWordToUppercase(item.onModel)}(ctx) {
         const ${commonModelName} =  await ${classModelName}.get${classModelName}By${firstWordToUppercase(item.onModel)}(ctx.query.pg, ctx.params.${item.refer})
-        ctx.body = new RetJson('success',${commonModelName})
-    }`
+        ctx.body = new RetJson(0, 'success', ${commonModelName})
+    },\n`
             })
         }
     
@@ -118,8 +121,9 @@ router.delete('/${modelName}/:id', ${modelName}Controller.destory); // 传入要
 router.put('/${modelName}/:id', ${modelName}Controller.update);\n`
 
 if(model.hasOwnProperty('foreign')){
+    // 根据外键生成对应资源路由
     model.foreign.forEach(item => {
-        routers +=`router.get('/${item.onModel}/:id/${modelName}', ${modelName}Controller.show${firstWordToUppercase(model.modelName)}By${firstWordToUppercase(item.onModel)});`
+        routers +=`router.get('/${item.onModel}/:id/${modelName}', ${modelName}Controller.show${firstWordToUppercase(model.modelName)}By${firstWordToUppercase(item.onModel)});\n`
     })
 }
 

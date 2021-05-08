@@ -51,14 +51,16 @@ module.exports = function(type) {
 const retJson =
 `class RetJson {
     constructor(errcode = 0, errmsg = '', retobj = '') {
-        this.errcode = errcode;
-        this.errmsg = errmsg;
-        this.retobj = retobj;
+      this.errcode = errcode;
+      this.errmsg = errmsg;
+      this.retobj = retobj;
     }
-}    
+  }
+  
 module.exports = RetJson;`
 
 const util = `
+const fs = require('fs')
 module.exports = {
     uploader(file,allowExt=['jpg','png','gif','jpeg','bmp'],uploadPath="./upload/images"){
         const splits = file.name.split('.');
@@ -76,7 +78,7 @@ module.exports = {
         const upStream = fs.createWriteStream(fullFileName);
         // 可读流通过管道写入可写流
         reader.pipe(upStream);
-        fullFileName = \`http://localhost:\$\{webPort\}/\$\{fileName\}.\$\{extName\}\`
+        fullFileName = \`http://localhost:8081/\$\{fileName\}.\$\{extName\}\`
         return fullFileName;
         }else{
         return undefined
