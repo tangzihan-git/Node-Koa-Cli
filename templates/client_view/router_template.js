@@ -12,14 +12,14 @@ const router = new Router({
         },
         {
             path: '/',
-            component: () => import('../components/common/Home.vue'),
+            component: () => import('../views/index/index.vue'),
             meta: { title: 'system' },
             children: ${ router }
                
         },
         {
             path: '/login',
-            component: () => import('../components/page/Login.vue'),
+            component: () => import('../views/login/login.vue'),
             meta: { title: '登录', excludePermision: true }
         },
         {
