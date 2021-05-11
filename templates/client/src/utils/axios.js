@@ -3,7 +3,7 @@ import router from '../router/index';
 import { Loading } from 'element-ui';
 // axios配置
 axios.defaults.timeout = 10000;
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = 'http://localhost:8081';
 // 请求拦截器
 axios.interceptors.request.use(
   (req) => {

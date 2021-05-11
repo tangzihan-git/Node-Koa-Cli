@@ -1,4 +1,4 @@
 export default {
-    base_url:'http://localhost:3000',
-    upload_url:'http://localhost:3000/upload'
+    base_url:'http://localhost:8081',
+    upload_url:'http://localhost:8081/upload'
 }

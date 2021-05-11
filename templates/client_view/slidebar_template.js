@@ -1,4 +1,7 @@
-<template>
+module.exports = function (slideMenu) {
+
+
+return `<template>
     <div class="sidebar">
         <el-menu
             class="sidebar-el-menu"
@@ -55,65 +58,7 @@ export default {
     data() {
         return {
             collapse: false,
-            items: [
-                {
-                    icon: 'el-icon-lx-home',
-                    index: 'home',
-                    title: '系统首页',
-                    type:[2,3] // 允许访问的用户组
-                },
-                {
-                    icon: 'el-icon-user-solid',
-                    index: 'user_manage',
-                    title: '用户管理',
-                    type:[3]
-                },
-                {
-                    icon: 'el-icon-s-operation',
-                    index: 'category_manage',
-                    title: '分类管理',
-                    type:[3]
-                },
-                {
-                    icon: 'el-icon-star-on',
-                    index: 'business_manage',
-                    title: '商户管理',
-                    type:[3]
-                },
-                  {
-                    icon: 'el-icon-s-custom',
-                    index: 'business_info_manage',
-                    title: '商户信息',
-                    type:[2]
-                },
-                {
-                    icon: 'el-icon-s-goods',
-                    index: 'goods_manage', 
-                    title: '商品管理',
-                    type:[2,3] 
-                },
-              
-                 {
-                    icon: 'el-icon-s-operation',
-                    index: 'type_manage',
-                    title: '类别管理',
-                    type:[2]
-                },
-                 {
-                    icon: 'el-icon-position',
-                    index: 'order_manage',
-                    title: '订单管理',
-                    type:[2,3]
-                },
-                {
-                    icon: 'el-icon-document',
-                    index: 'comment_manage',
-                    title: '评价管理',
-                    type:[2,3]
-                },
-
-                
-            ]
+            items:${ slideMenu }
         };
     },
     computed: {
@@ -149,4 +94,5 @@ export default {
 .sidebar > ul {
     height: 100%;
 }
-</style>
+</style>`
+}
