@@ -75,7 +75,7 @@ export default {
             let ids = '';
             this.delList = this.delList.concat(this.multipleSelection);
             for (let i = 0; i < length; i++) {
-                ids += this.multipleSelection[i]._id + ',';
+                ids += this.multipleSelection[i]._id ? this.multipleSelection[i]._id: this.multipleSelection[i].id  + ',';
             }
             // 去掉最后一个逗号
             let dex = ids.lastIndexOf(',')
@@ -92,7 +92,7 @@ export default {
                 console.log(idArr)
                 // 前端删除
                 this.Datas = this.Datas.filter(items=>{
-                    if(!idArr.includes(items._id.toString())){
+                    if(!idArr.includes(items._id ? items._id.toString() : items.id.toString() )){
                         return items
                     }
                 })
@@ -115,7 +115,8 @@ export default {
         }).then(() => {
             this.$message.success('删除成功');
             this.Datas.splice(index, 1); // 前端删除
-            this.delData(row._id,entry) // 后端删除
+            let id = row._id ? row._id : row.id
+            this.delData(id,entry) // 后端删除
         })
         },
         /**

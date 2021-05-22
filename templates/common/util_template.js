@@ -1,6 +1,7 @@
 module.exports = function() {
     return `
     uploader(file,allowExt=['jpg','png','gif','jpeg','bmp'],uploadPath="./upload/images"){
+      fs.mkdirSync('../upload/images',{recursive:true});
         const splits = file.name.split('.');
         const fileName = splits[0]+new Date().getTime() 
         const extName = splits.length > 1 ? splits[splits.length - 1] : '';

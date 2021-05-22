@@ -12,7 +12,7 @@ const router = new Router({
         },
         {
             path: '/',
-            component: () => import('../views/index/index.vue'),
+            component: () => import('../components/common/Home.vue'),
             meta: { title: 'system' },
             children: ${ router }
                
@@ -31,7 +31,8 @@ const router = new Router({
 
 // 
 router.beforeEach((to, from, next) =>{
-
+    next();
+    return;
     if(to.meta.excludePermision){
         // 不需要权限认证的路由 
         next()

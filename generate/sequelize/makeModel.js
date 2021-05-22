@@ -138,6 +138,7 @@ function generateModelMethods(model) {
             })
         }\n`
         })
+       
     }
 
 

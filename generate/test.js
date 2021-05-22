@@ -15,6 +15,7 @@ const slideBarTemplate = require('../templates/client_view/slidebar_template'); 
 module.exports  = function (){
     // 将模板复制的项目根目录
     checkDirectory(clientRoot,root ,copy);
+    // 有问题需要解决 先创建所有目录，在运行下面代码
     if(models.length == 0) throw Error(`\n 没有在${ ConfigModelRoot }中找到任何模型配置文件！\n No model configuration files were found in ${ ConfigModelRoot }\n`)
     // 所有模型的路由我呢见
     let children =  `[
@@ -87,7 +88,7 @@ module.exports  = function (){
         slideMenu += `
                 {
                     icon: '${ ctrlClass.icon ? ctrlClass.icon : 'el-icon-eleme' }',
-                    index: '${ modelName }',
+                    index: '${ modelName }_manage',
                     title: '${ ctrlClass.modelCn ? ctrlClass.modelCn : modelName }',
                     type:[2, ${ ctrlClass.isSuper ? 3 :'' }] 
                 },`
@@ -243,7 +244,7 @@ editCode += `
   let  foreignCode = ""; 
   if (model.hasOwnProperty('foreign')) {
     model.foreign.forEach( item => {
-foreignCode = `
+foreignCode += `
                 <el-table-column prop="${ item.key }" label="${ item.foreignDesc ? item.foreignDesc : item.onModel }">
                   <template slot-scope="scope">
                     <el-select v-model="scope.row.${ item.key }"  placeholder="选择所属${ item.foreignDesc ? item.foreignDesc : item.onModel }">
@@ -254,7 +255,7 @@ foreignCode = `
 
 editCode += `
             <el-form-item label="${ item.foreignDesc ? item.foreignDesc : item.onModel }" :label-width="formLabelWidth">
-                <el-select v-model="form.scenery_id"  placeholder="选择所属${ item.foreignDesc ? item.foreignDesc : item.onModel }">
+                <el-select v-model="form.${item.key}"  placeholder="选择所属${ item.foreignDesc ? item.foreignDesc : item.onModel }">
                     <el-option v-for="item in  ${ item.onModel }s" :key="item.${ item.refer }" :label="item.${ item.referLabel }" :value="item.${ item.refer }"></el-option>
                 </el-select>
             </el-form-item>`
@@ -268,7 +269,7 @@ tableCode += `
                 <el-table-column label="操作" width="180" align="center">
                   <template slot-scope="scope">
                     ${ model.actions.hasOwnProperty('update') ? '<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)" >编辑</el-button>' :'' }
-                    ${ model.actions.hasOwnProperty('remove') ? '<el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row.'+modelName+')">删除</el-button>':'' }
+                    ${ model.actions.hasOwnProperty('remove') ? '<el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row, \''+modelName+'\')">删除</el-button>':'' }
                     
                   </template>
                 </el-table-column>`

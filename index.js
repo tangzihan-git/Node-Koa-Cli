@@ -9,32 +9,30 @@ const modelConfigTemplate = require('./templates/common/model_config_template');
 const accountControllerTemplate = require('./templates/common/account_controller_template');
 let root = process.cwd();
 
-const  program  = require('commander');
+const program  = require('commander');
 const minimist = require('minimist');
 const chalk = require('chalk');
 const chooseArg = require('./lib/promptModules/choose');
-
 program
  .command('create <app-name>')
  .description('Create a new project powered by node-koa-cli')
  .action(async (name, cmd) => {
    // console.log(`创建${name}目录`)
-   console.log(chalk.bold.blue(`Node Koa Cli ${require('./package').version}`))
-
-   if (minimist(process.argv.slice(3))._.length > 1) {
-     console.log(chalk.yellow('\n Warning: You provided more than one argument. The first one will be used as the app\'s name, the rest are ignored.'))
-   }
+    console.log(chalk.bold.blue(`Node Koa Cli ${require('./package').version}`))
+    if (minimist(process.argv.slice(3))._.length > 1) {
+        console.log(chalk.yellow('\n Warning: You provided more than one argument. The first one will be used as the app\'s name, the rest are ignored.'))
+    }
     // 选择参数
     const arg = await chooseArg()
-    root = path.resolve(root,`./${name}`)
+    root = path.resolve(root, `./${name}`)
     // 创建项目跟目录
-    fs.mkdirSync(root,{recursive:true})
+    fs.mkdirSync(root, { recursive: true })
     // 根据用户的选项生成package.json 并执行npm install
     makePackage(name, arg)
     // 生成最基础下项目骨架
     __init__(arg)
    console.log('@ Successfully created project ' + chalk.yellow(`${name}`));
-   console.log("@ Get started with the following commands:")
+   console.log('@ Get started with the following commands:')
 
    console.log(chalk.blue(`     $ cd ${name}`))
    console.log(chalk.blue(`     $ npm install`))
@@ -55,13 +53,11 @@ program
  .command('make:admin')
  .description('Quickly generate background management system according to model configuration file')
  .action(async (name, cmd) => {
-   console.log(chalk.yellow("The module is under development..."))
+    console.log(chalk.yellow("The module is under development..."))
    // 创建管理系统根目录
-   fs.mkdirSync(`${root}/client`,{recursive:true})
+    fs.mkdirSync(`${root}/client`,{recursive:true})
    // 填入静态文件
-  //  "./templates/client/babel.config.js"
-  // copyIt(`${root}/client//babel.config.js`,)
-  require('./generate/test')()
+    require('./generate/test')()
    
 
  })

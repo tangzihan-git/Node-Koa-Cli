@@ -5,8 +5,7 @@ const koaBody = require('koa-body');
 const RetJson  = require('./lib/retjson');
 const { router } = require('./router');
 const cors = require('koa2-cors');
-
-${options.static ? "const static = require('./router/static');":''}
+const static = require('./router/static');
 
 const app = new Koa();
 
@@ -31,7 +30,7 @@ app.use(async (ctx, next) => {
     }
 });
 app.use(cors());
-${options.static ? "static(router,{html:365});":''}
+static(router,{html:365});
 app.use(router.routes());
 app.use(router.allowedMethods());
 
