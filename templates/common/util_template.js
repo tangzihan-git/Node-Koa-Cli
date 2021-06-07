@@ -1,14 +1,12 @@
 module.exports = function() {
     return `
     uploader(file,allowExt=['jpg','png','gif','jpeg','bmp'],uploadPath="./upload/images"){
-      fs.mkdirSync('../upload/images',{recursive:true});
+      fs.mkdirSync(uploadPath,{recursive:true});
         const splits = file.name.split('.');
         const fileName = splits[0]+new Date().getTime() 
         const extName = splits.length > 1 ? splits[splits.length - 1] : '';
         if(allowExt.includes(extName)){
-          fs.mkdir(uploadPath, { recursive: true }, (err) => {
-          if (err) throw err;
-        });
+        ]
   
           let fullFileName = uploadPath+'/'+fileName+'.'+extName
           // 创建可读流

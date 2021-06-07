@@ -1,9 +1,9 @@
 let {dependencies, devDependencies} = require('./packageJson.json')
 module.exports = function(name,argObj) {
     devDependencies[`${require('../package.json').name}`] = `^${require('../package.json').version}` // 开发依赖库
-    if(argObj.static) {
+    // if(argObj.static) {
         dependencies['koa-static'] =  "^5.0.0"
-    }
+    // }
     switch (argObj.lib) {
         case 'mongoose':
             dependencies['mongoose'] = "^5.12.3";

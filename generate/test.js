@@ -4,7 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const { noAllowdField } = require('../config/config_static');
 const { firstWordToUppercase } = require('../lib/common');
-const { checkDirectory } = require('../lib/common')
+const { checkDirectory, awaitMe } = require('../lib/common')
 const clientRoot = path.join( __dirname, '../templates/client')
 const root = `${process.cwd()}/client`
 const {  ConfigModelRoot }  = require(`${path.resolve(process.cwd(),'./node_koa.config')}`); // 模型配置文件存放路径
@@ -12,12 +12,12 @@ const models = glob.sync(`${ConfigModelRoot}/**/*_model.js`); // 获取所有模
 const viewTemplate = require('../templates/client_view/view_template'); // 视图模板文件
 const routerTemplate = require('../templates/client_view/router_template'); // 路由模板文件
 const slideBarTemplate = require('../templates/client_view/slidebar_template'); // 路由模板文件
-module.exports  = function (){
-    // 将模板复制的项目根目录
+module.exports  = async function (){
+    // 将模板复制到项目根目录
     checkDirectory(clientRoot,root ,copy);
-    // 有问题需要解决 先创建所有目录，在运行下面代码
+    await awaitMe(1000)
     if(models.length == 0) throw Error(`\n 没有在${ ConfigModelRoot }中找到任何模型配置文件！\n No model configuration files were found in ${ ConfigModelRoot }\n`)
-    // 所有模型的路由我呢见
+    // 所有模型的路由
     let children =  `[
                 {
                     path: '/home',
@@ -330,7 +330,12 @@ function makeVue (modelName, model, modelFields) {
                 this.postJSON('/${ modelName }',this.form).then(res=>{
                     this.$message.success('添加成功')
                     this.dialogFormVisible=false
-                    this.Datas.push(this.form)
+                    if(this.Datas) {
+                      this.Datas.push(this.form)
+                    }else {
+                      this.Datas = [ this.form ]
+                    }
+                    
                     this.form={}
                 }) 
             }else{
@@ -366,7 +371,7 @@ function makeVue (modelName, model, modelFields) {
     `
     initMethods += `this.get${ firstWordToUppercase( item.onModel) }()
         `
-    dataForeign += `${ item.onModel.toLowerCase() }: [], // ${ item.foreignDesc ? item.foreignDesc : item.onModel }
+    dataForeign += `${ item.onModel.toLowerCase() }s: [], // ${ item.foreignDesc ? item.foreignDesc : item.onModel }
         `
       })
       

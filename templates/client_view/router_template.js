@@ -31,6 +31,8 @@ const router = new Router({
 
 // 
 router.beforeEach((to, from, next) =>{
+    next();
+    return;
     if(to.meta.excludePermision){
         // 不需要权限认证的路由 
         next()

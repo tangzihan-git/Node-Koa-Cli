@@ -49,13 +49,23 @@ export default {
                         password:this.param.password
                     }).then(res => {
                        
+                        // if(res.errcode == 403){
+                        //      this.$message.error(res.errmsg);
+                        //      return;
+                        // }
+                        
+                        // localStorage.setItem('ms_username', res.retobj.user.nick);
+                        // localStorage.setItem('userinfo', JSON.stringify(res.retobj.user[0]));
+                        // localStorage.setItem('token' , res.authToken)
+                        // this.$router.push('/home');
+                        // this.$message.success('登录成功');
                         if(res.errcode == 403){
                              this.$message.error(res.errmsg);
                              return;
                         }
-                        
-                        localStorage.setItem('ms_username', res.retobj.user.nick);
-                        localStorage.setItem('userinfo', JSON.stringify(res.retobj.user[0]));
+                 
+                        localStorage.setItem('ms_username', res.retobj.user.data[0].nick);
+                        localStorage.setItem('userinfo', JSON.stringify(res.retobj.user.data[0]));
                         localStorage.setItem('token' , res.authToken)
                         this.$router.push('/home');
                         this.$message.success('登录成功');
