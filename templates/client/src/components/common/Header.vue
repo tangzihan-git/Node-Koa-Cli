@@ -54,7 +54,12 @@ export default {
         }
     },
     created(){
-        this.userinfo = JSON.parse(localStorage.getItem('userinfo'))
+         this.userinfo = JSON.parse(localStorage.getItem('userinfo')) ? 
+        JSON.parse(localStorage.getItem('userinfo')) :
+        {
+            avatar:'',
+            nick:'游客'
+        }
     },
     methods: {
         // 用户名下拉菜单选择事件

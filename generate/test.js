@@ -14,7 +14,7 @@ const routerTemplate = require('../templates/client_view/router_template'); // �
 const slideBarTemplate = require('../templates/client_view/slidebar_template'); // 路由模板文件
 module.exports  = async function (){
     // 将模板复制到项目根目录
-    checkDirectory(clientRoot,root ,copy);
+    checkDirectory(clientRoot, root ,copy);
     await awaitMe(1000)
     if(models.length == 0) throw Error(`\n 没有在${ ConfigModelRoot }中找到任何模型配置文件！\n No model configuration files were found in ${ ConfigModelRoot }\n`)
     // 所有模型的路由
@@ -22,17 +22,17 @@ module.exports  = async function (){
                 {
                     path: '/home',
                     component: () => import('../views/index/index.vue'),
-                    meta: { title: '系统首页',  }
+                    meta: { title: '系统首页', permissions:[1,2,3] }
                 },
                 {
                     path: '/404',
                     component: () => import('../components/page/404.vue'),
-                    meta: { title: '404' }
+                    meta: { title: '404', excludePermision: true }
                 },
                 {
                     path: '/403',
                     component: () => import('../components/page/403.vue'),
-                    meta: { title: '403' }
+                    meta: { title: '403', excludePermision: true }
                 },`
     let slideMenu  = `[`
        
@@ -77,12 +77,11 @@ module.exports  = async function (){
           console.log(`${ root }/src/views/${ modelName }_manage/${ modelName }_manage/${ modelName }_manage.vue 生成成功！`)
         });
         // 生成路由
-       
         children +=  `
                 {
                 path: '/${ modelName }_manage',
                     component: () => import('../views/${ modelName }_manage/${ modelName }_manage.vue'),
-                    meta: { title: '${ ctrlClass.modelCn ? ctrlClass.modelCn : modelName }', isAdmin:true, isSuper: ${ ctrlClass.isSuper ? true : false} }
+                    meta: { title: '${ ctrlClass.modelCn ? ctrlClass.modelCn : modelName }', permissions: [${ ctrlClass.permissions ? ctrlClass.permissions.toString() : '' }] }
                 },\n`
          // 生成左侧菜单
         slideMenu += `
@@ -90,7 +89,7 @@ module.exports  = async function (){
                     icon: '${ ctrlClass.icon ? ctrlClass.icon : 'el-icon-eleme' }',
                     index: '${ modelName }_manage',
                     title: '${ ctrlClass.modelCn ? ctrlClass.modelCn : modelName }',
-                    type:[2, ${ ctrlClass.isSuper ? 3 :'' }] 
+                    type:[${ ctrlClass.permissions ? ctrlClass.permissions.toString() : '' }] 
                 },`
     })
     children += `
@@ -155,7 +154,7 @@ function makeTableCode(model,modelName,modelFields){
     modelFields.forEach(item=>{
       for (const key in item) {
         // console.log(item[key])
-        // isStatus:该字段是否为一个标识 
+        // * isStatus:该字段是否为一个标识 
         // * isCover:该字段是否存放的是图片
         // * isScore:该字段是一个评分组件 
         // * isHidden:该字段不会出现在管理视图里面

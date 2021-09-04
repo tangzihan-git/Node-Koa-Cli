@@ -40,9 +40,9 @@ return `<template>
                             >{{ subItem.title }}</el-menu-item>
                         </template>
                     </el-submenu>
-                </template> v-if="item.type.includes(userinfo.type)" -->
+                </template> -->
                 <template >
-                    <el-menu-item :index="item.index" :key="item.index">
+                    <el-menu-item :index="item.index" :key="item.index" v-if="item.type.includes(userinfo.type)" >
                         <i :class="item.icon"></i>
                         <span slot="title">{{ item.title }}</span>
                     </el-menu-item>

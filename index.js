@@ -43,9 +43,19 @@ program
  program
  .command('make:curd')
  .description('Quickly generate restful API according to model configuration file')
+ .option('-m, --m [type]', 'Select a model to generate curd')
  .action(async (name, cmd) => {
     console.log(chalk.yellow('ready...'))
-    require('./generate/create')(process.cwd())
+    let model = name.m
+    if (model) {
+      // 选择一个已经存在的模型生成curd
+      require('./generate/create')(process.cwd(),{}, `${model}_model.js`)
+    }else {
+      // 根据所有模型生成curd
+      require('./generate/create')(process.cwd())
+    }
+    // 生成curd
+  
     console.log(chalk.blue('model, controller and router are generated successfully!'))
 
  })

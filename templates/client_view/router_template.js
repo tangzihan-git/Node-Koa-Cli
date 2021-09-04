@@ -13,7 +13,7 @@ const router = new Router({
         {
             path: '/',
             component: () => import('../components/common/Home.vue'),
-            meta: { title: 'system' },
+            meta: { title: 'system', permissions:[1,2,3] },
             children: ${ router }
                
         },
@@ -31,16 +31,17 @@ const router = new Router({
 
 // 
 router.beforeEach((to, from, next) =>{
-    next();
-    return;
     if(to.meta.excludePermision){
         // 不需要权限认证的路由 
         next()
     }else{
         let token = localStorage.getItem('token')
         if(token){
-            // 管理员已登录
-            next()
+            let userinfo = JSON.parse(localStorage.getItem('userinfo'))
+            // 管理员已登录 判断其权限
+            if (to.meta.permissions.includes(userinfo.type)) {
+                next()
+            }
         }else{
             // 管理员未登录
             next({

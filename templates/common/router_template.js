@@ -7,13 +7,14 @@ module.exports = function({routers,controllers},options) {
 let modelTemplate = `const Router = require('koa-router');
 const router = new Router();
 const appController = require('../controllers/app.js');
-${options.jwt ? "const accountController = require('../controllers/account.js');":''}
+const accountController = require('../controllers/account.js');
+
 ${controllers}
 router.get('/',(ctx, next )=>{
     ctx.body="${welcome}"
 });
 router.post('/upload', appController.updateFile);
-${options.jwt ? "router.post('/login', accountController.login);":''}
+router.post('/login', accountController.login);
 ${routers}
 module.exports = {
     router
